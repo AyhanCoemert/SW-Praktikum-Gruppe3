@@ -13,4 +13,4 @@ class Student(bo.BusinessObject):
         self._mail_adresse = 0
         self._name = 0
         self._vorname = 0
-        self._mail_adresse = 0
+        self._mail_adresse = 0 #test
