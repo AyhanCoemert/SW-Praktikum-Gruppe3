@@ -45,4 +45,4 @@ class Studiengang(bo.BusinessObject):
         obj.set_module(dictionary["module"])
         obj.set_semester(dictionary["semester"])
         obj.set_name(dictionary["name"])
-        return obj                         # nochmal kontrollieren
+        return obj                          # nochmal kontrollieren
