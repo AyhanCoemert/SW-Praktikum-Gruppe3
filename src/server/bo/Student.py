@@ -36,24 +36,45 @@ class Student(bo.BusinessObject):
     def get_vorname(self):
         return self._vorname
 
-    def set_veorname(self, vorname):
+    def set_vorname(self, vorname):
         self._vorname = vorname
 
-    def get_edv_nummer(self):
-        return self._edv_nummer
+    def get_mail_adresse(self):
+        return self._mail_adresse
 
-    def set_edv_nummer(self, edv_nummer):
-        self._edv_nummer = edv_nummer
+    def set_mail_adresse(self, mail_adresse):
+        self._mail_adresse = mail_adresse
 
-    # Erstellung von Modul mit Dictionary
+    def get_semester(self):
+        return self._semester
+
+    def set_semester(self, semester):
+        self._semester = semester
+
+    def get_studiengang(self):
+        return self._studiengang
+
+    def set_studiengang(self, studiengang):
+        self._studiengang = studiengang
+
+    def get_matrikelnummer(self):
+        return self._matrikelnummer
+
+    def set_matrikelnummer(self, matrikelnummer):
+        self._matrikelnummer = matrikelnummer
+
+    # Erstellung von Student mit Dictionary
     @staticmethod
     def from_dict(dictionary=dict()):
-        obj = Modul()
+        obj = Student()
         obj.set_id(dictionary["id"])
         obj.set_creation_date(dictionary["creation_date"])
-        obj.set_sws(dictionary["sws"])
-        obj.set_ects(dictionary["ects"])
-        obj.set_literatur(dictionary["literatur"])
-        obj.set_verantwortlicher(dictionary["verantwortlicher"])
-        obj.set_edv_nummer(dictionary["edv_nummer"])
-        return obj
+        obj.set_ID(dictionary["ID"])
+        obj.set_google_user_id(dictionary["google_user_id"])
+        obj.set_name(dictionary["name"])
+        obj.set_vorname(dictionary["vorname"])
+        obj.set_mail_adresse(dictionary["mail_adresse"])
+        obj.set_semester(dictionary["semester"])
+        obj.set_studiengang(dictionary["studiengang"])
+        obj.set_matrikelnummer(dictionary["matrikelnummer"])
+        return obj                                  # nochmal kontrollieren
