@@ -77,4 +77,4 @@ class Student(bo.BusinessObject):
         obj.set_semester(dictionary["semester"])
         obj.set_studiengang(dictionary["studiengang"])
         obj.set_matrikelnummer(dictionary["matrikelnummer"])
-        return obj                                  # nochmal kontrollieren
+        return obj                                   # nochmal kontrollieren
