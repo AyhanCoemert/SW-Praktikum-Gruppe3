@@ -1,52 +1,44 @@
-let table = document.createElement('table');
-let thead = document.createElement('thead');
-let tbody = document.createElement('tbody');
+import React,{useState} from 'react';
+import './App.css';
+import MaterialTable from 'material-table'
 
-table.appendChild(thead);
-table.appendChild(tbody);
 
-// Adding the entire table to the body tag
-document.getElementById('body').appendChild(table);
 
-// Creating and adding data to first row of the table
-let row_1 = document.createElement('tr');
-let heading_1 = document.createElement('th');
-heading_1.innerHTML = "Sr. No.";
-let heading_2 = document.createElement('th');
-heading_2.innerHTML = "Name";
-let heading_3 = document.createElement('th');
-heading_3.innerHTML = "Company";
+function SPO(){
+    const [tableData, setTableData] = useState ([
+     {Semester:"1", EDV_Nummer:"335000", Modul:"Einstufungstest Englisch", SWS:"0", ECTS:"0", Prüfungsform:"LÜ"},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+     {Semester:"", EDV_Nummer:"", Modul:"", SWS:"", ECTS:"", Prüfungsform:""},
+    ])
+    const columns=[
+        {title:"Semester", field:"Semester"},
+        {title:"EDV_Nummer", field:"EDV_Nummer"},
+        {title:"Modul", field:"Modul"},
+        {title:"SWS", field:"SWS"},
+        {title:"ECTS", field:"ECTS"},
+        {title:"Prüfungsform", field:"Prüfungsform"},
+    ]
+    return(
+        <div className="SPO">
+          <h1 align="center">SPOtch</h1>
+          <h4 align="center"></h4>
 
-row_1.appendChild(heading_1);
-row_1.appendChild(heading_2);
-row_1.appendChild(heading_3);
-thead.appendChild(row_1);
+          <MaterialTable columns = {columns} data={tableData}/>
+       
+        </div>
+      );
+}
 
-// Creating and adding data to second row of the table
-let row_2 = document.createElement('tr');
-let row_2_data_1 = document.createElement('td');
-row_2_data_1.innerHTML = "1.";
-let row_2_data_2 = document.createElement('td');
-row_2_data_2.innerHTML = "James Clerk";
-let row_2_data_3 = document.createElement('td');
-row_2_data_3.innerHTML = "Netflix";
-
-row_2.appendChild(row_2_data_1);
-row_2.appendChild(row_2_data_2);
-row_2.appendChild(row_2_data_3);
-tbody.appendChild(row_2);
-
-// Creating and adding data to third row of the table
-let row_3 = document.createElement('tr');
-let row_3_data_1 = document.createElement('td');
-row_3_data_1.innerHTML = "2.";
-let row_3_data_2 = document.createElement('td');
-row_3_data_2.innerHTML = "Adam White";
-let row_3_data_3 = document.createElement('td');
-row_3_data_3.innerHTML = "Microsoft";
-
-row_3.appendChild(row_3_data_1);
-row_3.appendChild(row_3_data_2);
-row_3.appendChild(row_3_data_3);
-tbody.appendChild(row_3);
-
+export default SPO;
