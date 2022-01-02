@@ -9,6 +9,8 @@ import './App.css';
 function App() {
   return (
     <div className="App">
+      <h1 align="center">SPOtch</h1>
+      <h4 align="center"></h4>
    
     </div>
   );
