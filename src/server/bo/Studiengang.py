@@ -38,7 +38,7 @@ class Studiengang(bo.BusinessObject):
     # Erstellung von Studiengang mit Dictionary
     @staticmethod
     def from_dict(dictionary=dict()):
-        obj = Modul()
+        obj = Studiengang()
         obj.set_id(dictionary["id"])
         obj.set_creation_date(dictionary["creation_date"])
         obj.set_ID(dictionary["ID"])
