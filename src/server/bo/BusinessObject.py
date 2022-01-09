@@ -6,14 +6,14 @@ from datetime import datetime
 class BusinessObject(ABC):
 
     def __init__(self):
-        self._id = 0
+        self._ID = 0
         self._creation_date = datetime.now().isoformat()
 
-    def get_id(self):
-        return self._id
+    def get_ID(self):
+        return self._ID
 
-    def set_id(self, value):
-        self._id = value
+    def set_ID(self, value):
+        self._ID = value
 
     def get_creation_date(self):
         return self._creation_date

@@ -27,7 +27,7 @@ class Semester(bo.BusinessObject):
     @staticmethod
     def from_dict(dictionary=dict()):
         obj = Semester()
-        obj.set_id(dictionary["id"])
+        obj.set_ID(dictionary["ID"])
         obj.set_creation_date(dictionary["creation_date"])
         obj.set_semesteranzahl(dictionary["semesteranzahl"])
         return obj                          # nochmal kontrollieren
