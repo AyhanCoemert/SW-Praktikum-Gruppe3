@@ -67,7 +67,6 @@ class Student(bo.BusinessObject):
     @staticmethod
     def from_dict(dictionary=dict()):
         obj = Student()
-        obj.set_id(dictionary["id"])
         obj.set_creation_date(dictionary["creation_date"])
         obj.set_ID(dictionary["ID"])
         obj.set_google_user_id(dictionary["google_user_id"])

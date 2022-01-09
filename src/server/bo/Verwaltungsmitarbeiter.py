@@ -47,7 +47,6 @@ class Verwaltungsmitarbeiter(bo.BusinessObject):
     @staticmethod
     def from_dict(dictionary=dict()):
         obj = Verwaltungsmitarbeiter()
-        obj.set_id(dictionary["id"])
         obj.set_creation_date(dictionary["creation_date"])
         obj.set_ID(dictionary["ID"])
         obj.set_name(dictionary["name"])
