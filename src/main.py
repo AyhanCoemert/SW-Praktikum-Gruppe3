@@ -91,8 +91,8 @@ class UserListOperations(Resource):
         modul = adm.get_all_modul()
         return modul
 
-    @studyfix.marshal_with(user, code=200)
-    @studyfix.expect(user)
+    @spotch.marshal_with(modul, code=200)
+    @spotch.expect(modul)
     @secured
     def post(self):
         """Anlegen eines neuen User-Objekts.
@@ -103,15 +103,15 @@ class UserListOperations(Resource):
         zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*"""
 
         adm = Administration()
-        prpl = User.from_dict(api.payload)
+        prpl = Modul.from_dict(api.payload)
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
 
         if prpl is not None:
             """ Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben."""
 
-            s = adm.create_user(prpl.get_google_id(), prpl.get_firstname(), prpl.get_lastname(),
-                                prpl.get_email(), prpl.get_adress())
+            s = adm.create_modul(prpl.get_creation_date(), prpl.get_sws(), prpl.get_ects(),
+                                prpl.get_literatur(), prpl.get_verantwortlicher(), prpl.get_edv_nummer())
 
             return s, 200
 
@@ -121,10 +121,10 @@ class UserListOperations(Resource):
             return '', 500
 
 
-@studyfix.route('/user/<int:id>')
-@studyfix.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
-class UserOperations(Resource):
-    @studyfix.marshal_with(user)
+@spotch.route('/modul/<int:id>')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class modulOperations(Resource):
+    @studyfix.marshal_with(modul)
     @secured
     @secured
     def get(self, id):

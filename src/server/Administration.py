@@ -1,20 +1,20 @@
-from .bo.User import User
-from .bo.Chat import Chat
-from .bo.ChatInvitation import ChatInvitation
-from .bo.ChatMessage import ChatMessage
-from .bo.LearningprofileGroup import LearningProfileGroup
-from .bo.LearningProfileUser import LearningProfileUser
-from .bo.StudyGroup import StudyGroup
-from .bo.GroupInvitation import GroupInvitation
+from .bo.Modul import Modul
+from .bo.Modulteil import Modulteil
+from .bo.Prüfungsformat import Prüfungsformat
+from .bo.Semester import Semester
+from .bo.SPO import SPO
+from .bo.Student import Student
+from .bo.Studiengang import Studiengang
+from .bo.Verwaltungsmitarbeiter import Verwaltungsmitarbeiter
 
-from .db.UserMapper import *
-from .db.ChatMapper import *
-from .db.ChatInvitationMapper import *
-from .db.ChatMessageMapper import *
-from .db.LearningProfileGroupMapper import *
-from .db.LearningProfileUserMapper import *
-from .db.StudyGroupMapper import *
-from .db.GroupInvitationMapper import *
+from .db.ModulMapper import *
+from .db.ModulteilMapper import *
+from .db.PrüfungsformatMapper import *
+from .db.SemesterMapper import *
+from .db.SPOMapper import *
+from .db.StudentMapper import *
+from .db.StudiengangMapper import *
+from .db.VerwaltungsmitarbeiterMapper import *
 
 
 class Administration(object):
@@ -38,48 +38,50 @@ class Administration(object):
     def __init__(self):
         pass
 
- def create_modul (self, name, englischer Titel, Alle Atribute rein):
+ def create_modul (self, name, englischer Titel, creation_date, sws, ects, literatur, verantwortlicher, edv_nummer):
         """Modul wird erstellt"""
 
         modul = Modul()
-        studygroup.set_name(name)
-        chat = self.create_chat(name)
-        studygroup.set_chat_id(chat.get_id())
-        studygroup.set_id(1)
-
-        with StudyGroupMapper() as mapper:
-            return mapper.insert(studygroup)
-
-
+        modul.set_name(name)
+        modul.set_creation_date(creation_date)
+        modul.set_sws(sws)
+        modul.set_ects(ects)
+        modul.set_literatur(literatur)
+        modul.set_verantwortlicher(verantwortlicher)
+        modul.set_edv_nummer(edv_nummer)
 
 
-    def get_studygroup_by_name(self, name):
-        """Den StudyGroup über den gegebenen Namen Auslesen"""
+        with MOdulMapper() as mapper:
+            return mapper.insert(Modul)
 
-        with StudyGroupMapper() as mapper:
-            return mapper.find_by_group_name(name)
 
-    def get_studygroup_by_id(self, id):
-        """StudyGroup mit gegebener ID Auslesen"""
 
-        with StudyGroupMapper() as mapper:
+
+    def get_modul_by_name(self, name):
+        with ModulMapper() as mapper:
+             return mapper.find_by_name(name)
+
+    def get_Modul_by_id(self, id):
+        """Modul mit gegebener ID Auslesen"""
+
+        with ModulMapper() as mapper:
             return mapper.find_by_id(id)
 
 
-    def get_all_studygroups(self):
+    def get_all_Modul(self):
         """Auslesen aller StudyGroups in unserem System"""
 
-        with StudyGroupMapper() as mapper:
+        with ModulMapper() as mapper:
             return mapper.find_all()
 
-    def save_studygroup(self, studygroup):
-        """Die gegebene StudyGroup speichern."""
+    def save_Modul(self, Modul):
+        """Das gegebene Modul speichern."""
 
-        with StudyGroupMapper() as mapper:
-            mapper.update(studygroup)
+        with ModulMapper() as mapper:
+            mapper.update(Modul)
 
-    def delete_studygroup(self, studygroup):
-        """Die gegebene StudyGroup aus unserem System löschen."""
+    def delete_Modul(self, Modul):
+        """Das gegebene Modul aus unserem System löschen."""
 
-        with StudyGroupMapper() as mapper:
-            mapper.delete(studygroup)
+        with ModulMapper() as mapper:
+            mapper.delete(Modul)

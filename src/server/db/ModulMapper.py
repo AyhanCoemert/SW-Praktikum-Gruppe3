@@ -22,22 +22,32 @@ class ModulMapper(Mapper):
         if len(tuples) == 1:
             "Baue nur einen"
 
-            for (id, name, creation_date) in tuples:
-                chat = Chat()
-                chat.set_id(id)
-                chat.set_name(name)
-                chat.set_creation_date(creation_date)
-                result = chat
+            for (id, name, creation_date, sws, ects, literatur, verantwortlicher, edv_nummer) in tuples:
+                modul = Modul()
+                modul.set_id(id)
+                modul.set_name(name)
+                modul.set_creation_date(creation_date)
+                modul.set_sws(sws)
+                modul.set_ects(ects)
+                modul.set_literatur(literatur)
+                modul.set.verantwortlicher(verantwortlicher)
+                modul.edv_nummer(edv_nummer)
+                result = modul
 
         else:
             "Baue mehrere"
 
-            for (id, name, creation_date) in tuples:
-                chat = Chat()
-                chat.set_id(id)
-                chat.set_name(name)
-                chat.set_creation_date(creation_date)
-                result.append(chat)
+            for (id, name, creation_date, sws, ects, literatur, verantwortlicher, edv_nummer) in tuples:
+                modul = Modul()
+                modul.set_id(id)
+                modul.set_name(name)
+                modul.set_creation_date(creation_date)
+                modul.set_sws(sws)
+                modul.set_ects(ects)
+                modul.set_literatur(literatur)
+                modul.set.verantwortlicher(verantwortlicher)
+                modul.edv_nummer(edv_nummer)
+                result = modul
 
         return result
 
@@ -71,7 +81,7 @@ class ModulMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, name, creation_date FROM chat " \
+        command = "SELECT id, name, creation_date, sws, ects, literatur, verantwortlicher, edv_nummer FROM modul " \
                   "WHERE id LIKE '{}' ".format(id)
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -100,7 +110,7 @@ class ModulMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, name, creation_date FROM chat " \
+        command = "SELECT id, name, creation_date, sws, ects, literatur, verantwortlicher, edv_nummer FROM chat " \
                   "WHERE name LIKE '{}' ".format(name)
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -144,8 +154,8 @@ class ModulMapper(Mapper):
 
                 chat.set_id(maxid[0] + 1)
 
-        command = "INSERT INTO chat (id, name, creation_date) VALUES " \
-                  "('{}','{}','{}')".format(chat.get_id(), chat.get_name(), chat.get_creation_date())
+        command = "INSERT INTO chat (id, name, creation_date, sws, ects, literatur, verantwortlicher, edv_nummer) VALUES " \
+                  "('{}','{}','{}')".format(modul.get_id(), modul.get_name(), modul.get_creation_date() modul.get_ects() modul.get_sws() modul.get_literatur() modul.get_verantwortlicher modul.get_edv_nummer()() )
         cursor.execute(command)
 
         self._cnx.commit()
@@ -173,18 +183,10 @@ class ModulMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM chat WHERE id={}".format(chat.get_id())
+        command = "DELETE FROM modul WHERE id={}".format(modul.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
         cursor.close()
 
 
-# Zum Testen ausführen
-if (__name__ == "__main__"):
-    with ChatMapper() as mapper:
-        chat = Chat()
-        chat.set_name("Mathe Chat")
-        chat.set_id(2)
-
-        mapper.insert(chat)
