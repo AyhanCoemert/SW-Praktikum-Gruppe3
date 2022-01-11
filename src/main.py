@@ -78,3 +78,92 @@ Modul = api.inherit('Modul', bo, {
     'verantwortlicher': fields.Integer(attribute='_verantwortlicher', description='verantwortlicher eines moduls'),
     'edv_nummer': fields.Integer(attribute='_edv_nummer', description='edv_nummer eines moduls')
 })
+@spotch.route('/modul')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class UserListOperations(Resource):
+    """Auslesen aller modul-Objekte.
+    Sollten keine modul-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+
+    @spotch.marshal_list_with(modul)
+    @secured
+    def get(self):
+        adm = Administration()
+        modul = adm.get_all_modul()
+        return modul
+
+    @studyfix.marshal_with(user, code=200)
+    @studyfix.expect(user)
+    @secured
+    def post(self):
+        """Anlegen eines neuen User-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der Administration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*"""
+
+        adm = Administration()
+        prpl = User.from_dict(api.payload)
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+
+        if prpl is not None:
+            """ Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben."""
+
+            s = adm.create_user(prpl.get_google_id(), prpl.get_firstname(), prpl.get_lastname(),
+                                prpl.get_email(), prpl.get_adress())
+
+            return s, 200
+
+        else:
+            ''' Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.'''
+
+            return '', 500
+
+
+@studyfix.route('/user/<int:id>')
+@studyfix.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class UserOperations(Resource):
+    @studyfix.marshal_with(user)
+    @secured
+    @secured
+    def get(self, id):
+        """Auslesen eines bestimmten User-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_modul = adm.get_modul_by_id(id)
+        return single_modul
+
+    @spotch.marshal_with(modul)
+    @spotch.expect(modul, validate=True)
+    @secured
+    def put(self, id):
+        """Update eines bestimmten User-Objekts.
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        User-Objekts."""
+
+        adm = Administration()
+        modul = Modul.from_dict(api.payload)
+        print('main aufruf')
+
+        if modul is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) User-Objekts gesetzt."""
+
+            modul.set_id(id)
+            adm.save_modul(modul)
+            return '', 200
+
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """Löschen eines bestimmten User-Objekts.
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_modul = adm.get_modul_by_id(id)
+        adm.delete_modul(single_modul)
+        return '', 200
