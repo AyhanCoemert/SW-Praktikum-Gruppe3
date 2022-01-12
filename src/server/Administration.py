@@ -69,7 +69,7 @@ class Administration(object):
 
 
     def get_all_Modul(self):
-        """Auslesen aller StudyGroups in unserem System"""
+        """Auslesen aller Module in unserem System"""
 
         with ModulMapper() as mapper:
             return mapper.find_all()

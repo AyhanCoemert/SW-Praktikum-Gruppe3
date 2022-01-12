@@ -52,8 +52,8 @@ class ModulMapper(Mapper):
         return result
 
     def find_all(self):
-        """Auslesen aller Chats in unserem System.
-        :return Eine Sammlung mit Chat-Objekten.
+        """Auslesen aller Module in unserem System.
+        :return Eine Sammlung mit Modul-Objekten.
         """
 
         result = []
@@ -71,10 +71,10 @@ class ModulMapper(Mapper):
         return result
 
     def find_by_id(self, id):
-        """Suchen eines Chats mit vorgegebener ID. Da diese eindeutig ist,
+        """Suchen eines Moduls mit vorgegebener ID. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
         :param id Primärschlüsselattribut (->DB)
-        :return Chat-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+        :return Modul-Objekt, das dem übergebenen Schlüssel entspricht, None bei
                 nicht vorhandenem DB-Tupel.
         """
 
@@ -101,9 +101,9 @@ class ModulMapper(Mapper):
         return result
 
     def find_by_name(self, name):
-        """Auslesen aller Chats anhand des Chatnamens.
-        :param name Name des zugehörigen Chats.
-        :return Eine Sammlung mit Chat-Objekten, die sämtliche Chats
+        """Auslesen aller Module anhand des Modulnamens.
+        :param name Name des zugehörigen Moduls.
+        :return Eine Sammlung mit Modul-Objekten, die sämtliche Module
             mit dem gewünschten Namen enthält.
         """
 
@@ -130,7 +130,7 @@ class ModulMapper(Mapper):
         return result
 
     def insert(self, chat):
-        """Einfügen eines Chat-Objekts in die Datenbank.
+        """Einfügen eines Modul-Objekts in die Datenbank.
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
         berichtigt.
         :param chat das zu speichernde Objekt
@@ -165,7 +165,7 @@ class ModulMapper(Mapper):
 
     def update(self, chat):
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
-        :param chat ist das Objekt, das in die DB geschrieben werden soll
+        :param Modul ist das Objekt, das in die DB geschrieben werden soll
         """
 
         cursor = self._cnx.cursor()
@@ -177,8 +177,8 @@ class ModulMapper(Mapper):
         cursor.close()
 
     def delete(self, chat):
-        """Löschen der Daten eines Chat-Objekts aus der Datenbank.
-        :param chat ist das aus der DB zu löschende "Objekt"
+        """Löschen der Daten eines Modul-Objekts aus der Datenbank.
+        :param Modul ist das aus der DB zu löschende "Objekt"
         """
 
         cursor = self._cnx.cursor()

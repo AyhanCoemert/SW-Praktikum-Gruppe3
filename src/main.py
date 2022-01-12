@@ -160,7 +160,7 @@ class modulOperations(Resource):
 
     @secured
     def delete(self, id):
-        """Löschen eines bestimmten User-Objekts.
+        """Löschen eines bestimmten Modul-Objekts.
         Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt."""
 
         adm = Administration()
