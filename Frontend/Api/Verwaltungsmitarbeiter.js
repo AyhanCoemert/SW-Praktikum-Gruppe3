@@ -78,4 +78,5 @@ export default class User extends BusinessObject{
 
         return result;
     }
+
 }
