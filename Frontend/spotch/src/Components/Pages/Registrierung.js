@@ -7,7 +7,7 @@ export default function Registrierung() {
 	const emailRef = useRef()
 	const passwortRef = useRef()
 	const passwortConfirmRef = useRef()
-	const {registrierung} = useAuth()
+	const { registrierung } = useAuth()
 	const [error, setError] = useState('')
 	const [loading, setLoading] = useState(false)
 
