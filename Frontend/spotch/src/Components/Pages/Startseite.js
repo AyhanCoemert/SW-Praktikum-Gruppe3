@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import './index.css';
-import './logo.svg';
-import Anmelden from './components/Registrierung';
+import Registrierung from '.Components/Pages/Registrierung';
 import SPO from './API/SPO'
 
 
