@@ -15,7 +15,7 @@ export default function Registrierung() {
 		e.preventDefault()
 
 		if (passwortRef.current.value !== passwortConfirmRef.current.value){
-			return setError('Passwords does not match')
+			return setError('Passwords do not match')
 
 		}
 
