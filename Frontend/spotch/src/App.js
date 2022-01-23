@@ -16,15 +16,14 @@ function App() {
         >
           
         <div className="w-100" style={{maxWidth:'400px'}}>
-          <router>
+          <Router>
           <AuthProvider>
-            <switch>
+            <Switch>
             <Route path="/login" component={Login} />
             <Route path="/registrierung" component={Registrierung} />
-            </switch>
+            </Switch>
           </AuthProvider>
-
-          </router>
+          </Router>
            <Registrierung/>
         </div>
       </Container>
