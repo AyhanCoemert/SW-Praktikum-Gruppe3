@@ -9,7 +9,7 @@ from src.server.bo.Modul import Modul
 """test Commit"""
 """test"""
 
-
+#fehlt etwas?
 
 """
 A. Konventionen für dieses Module:
@@ -52,11 +52,11 @@ In dem folgenden Abschnitt bauen wir ein Modell auf, das die Datenstruktur besch
 auf deren Basis Clients und Server Daten austauschen. Grundlage hierfür ist das Package flask-restx.
 """
 api = Api(app, version='1.0', title='Spotch API',
-          description='Eine App zum auffinden von Lernpartnern und Lerngruppen.')
+          description='Eine App um die zutreffende SPO zu finden.') #passt das so?
 
 """Anlegen eines Namespace
 Namespaces erlauben uns die Strukturierung von APIs. In diesem Fall fasst dieser Namespace alle
-studyFix-relevanten Operationen unter dem Präfix /studyfix zusammen."""
+Spotch-relevanten Operationen unter dem Präfix /Spotch zusammen."""
 
 Spotch = api.namespace('Spotch', description='Funktionen des Spotch')
 
@@ -76,7 +76,7 @@ Modul = api.inherit('Modul', bo, {
     'ects': fields.Integer(attribute='_ects', description='ects eines moduls'),
     'literatur': fields.Integer(attribute='_literatur ', description='literatur eines moduls'),
     'verantwortlicher': fields.Integer(attribute='_verantwortlicher', description='verantwortlicher eines moduls'),
-    'edv_nummer': fields.Integer(attribute='_edv_nummer', description='edv_nummer eines moduls')
+    'edv_nummer': fields.Integer(attribute='_edv_nummer', description='edv_nummer eines moduls') #muss das nicht für jeden einzeln?
 })
 @spotch.route('/modul')
 @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
@@ -167,3 +167,16 @@ class modulOperations(Resource):
         single_modul = adm.get_modul_by_id(id)
         adm.delete_modul(single_modul)
         return '', 200
+
+    @spotch.route('/modul-by-name/<string:name>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class ModulNameOperations(Resource):
+        @spotch.marshal_list_with(modul)
+        @secured
+        def get(self, name):
+            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            modul = adm.get_modul_by_name(name)
+            return modul
