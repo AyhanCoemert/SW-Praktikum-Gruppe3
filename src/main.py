@@ -989,7 +989,7 @@ class StudiengangatOperations(Resource):
         print('main aufruf')
 
         if studiengang is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Student-Objekts gesetzt."""
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Studiengang-Objekts gesetzt."""
 
             studiengang.set_id(id)
             adm.save_studiengang(studiengang)
@@ -1051,3 +1051,156 @@ class StudiengangatOperations(Resource):
 
 
 # ----- Verwaltungsmitarbeiter -----
+
+
+@spotch.route('/verwaltungsmitarbeiter')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class VerwaltungsmitarbeiterListOperations(Resource):
+    """Auslesen aller Verwaltungsmitarbeiter-Objekte.
+    Sollten keine Verwaltungsmitarbeiter-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+
+    @spotch.marshal_list_with(verwaltungsmitarbeiter)
+    @secured
+    def get(self):
+        adm = Administration()
+        verwaltungsmitarbeiter = adm.get_all_verwaltungsmitarbeiter()
+        return verwaltungsmitarbeiter
+
+    @spotch.marshal_with(verwaltungsmitarbeiter, code=200)
+    @spotch.expect(verwaltungsmitarbeiter)
+    @secured
+    def post(self):
+        """Anlegen eines neuen Verwaltungsmitarbeiter-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der Administration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*""" #kann man Client hier lassen?
+
+        adm = Administration()
+        prpl = Verwaltungsmitarbeiter.from_dict(api.payload)
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+
+        if prpl is not None:
+            """ Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben."""
+
+            s = adm.create_verwaltungsmitarbeiter(prpl.get_ID(),
+                                                  prpl.get_name(),
+                                                  prpl.get_vorname(),
+                                                  prpl.get_email(),
+                                                  prpl.get_passwort())
+
+            return s, 200
+
+        else:
+            ''' Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.'''
+
+            return '', 500
+
+
+@spotch.route('/verwaltungsmitarbeiter/<int:id>')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class VerwaltungsmitarbeiteratOperations(Resource):
+    @spotch.marshal_with(verwaltungsmitarbeiter)
+    @secured
+    @secured
+    def get(self, id):
+        """Auslesen eines bestimmten Verwaltungsmitarbeiter-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_verwaltungsmitarbeiter = adm.get_verwaltungsmitarbeiter_by_id(id)
+        return single_verwaltungsmitarbeiter
+
+    @spotch.marshal_with(verwaltungsmitarbeiter)
+    @spotch.expect(verwaltungsmitarbeiter, validate=True)
+    @secured
+    def put(self, id):
+        """Update eines bestimmten Verwaltungsmitarbeiter-Objekts.
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Verwaltungsmitarbeiter-Objekts."""
+
+        adm = Administration()
+        verwaltungsmitarbeiter = Verwaltungsmitarbeiter.from_dict(api.payload)
+        print('main aufruf')
+
+        if verwaltungsmitarbeiter is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Verwaltungsmitarbeiter-Objekts gesetzt."""
+
+            verwaltungsmitarbeiter.set_id(id)
+            adm.save_verwaltungsmitarbeiter(verwaltungsmitarbeiter)
+            return '', 200
+
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """Löschen eines bestimmten Verwaltungsmitarbeiter-Objekts.
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_verwaltungsmitarbeiter = adm.get_verwaltungsmitarbeiter(id)
+        adm.delete_verwaltungsmitarbeiter(single_verwaltungsmitarbeiter)
+        return '', 200
+
+
+    @spotch.route('/verwaltungsmitarbeiter-by-name/<string:name>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class VerwaltungsmitarbeiterNameOperations(Resource):
+        @spotch.marshal_list_with(verwaltungsmitarbeiter)
+        @secured
+        def get(self, name):
+            """ Auslesen von Verwaltungsmitarbeiter-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            verwaltungsmitarbeiter = adm.get_verwaltungsmitarbeiter_by_name(name)
+            return verwaltungsmitarbeiter
+
+
+    @spotch.route('/verwaltungsmitarbeiter-by-vorname/<string:vorname>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class VerwaltungsmitarbeiterVornameOperations(Resource):
+        @spotch.marshal_list_with(verwaltungsmitarbeiter)
+        @secured
+        def get(self, vorname):
+            """ Auslesen von Verwaltungsmitarbeiter-Objekten, die durch ihren Vornamen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```vorname``` in dem URI bestimmt."""
+
+            adm = Administration()
+            verwaltungsmitarbeiter = adm.get_verwaltungsmitarbeiter_by_vorname(vorname)
+            return verwaltungsmitarbeiter
+
+
+    @spotch.route('/verwaltungsmitarbeiter-by-email/<string:email>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class VerwaltungsmitarbeiterEmailOperations(Resource):
+        @spotch.marshal_list_with(verwaltungsmitarbeiter)
+        @secured
+        def get(self, email):
+            """ Auslesen von Verwaltungsmitarbeiter-Objekten, die durch ihre Email bestimmt werden.
+            Die auszulesenden Objekte werden durch ```email``` in dem URI bestimmt."""
+
+            adm = Administration()
+            verwaltungsmitarbeiter = adm.get_verwaltungsmitarbeiter_by_email(email)
+            return verwaltungsmitarbeiter
+
+
+    @spotch.route('/verwaltungsmitarbeiter-by-passwort/<string:passwort>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class VerwaltungsmitarbeiterPasswortOperations(Resource):
+        @spotch.marshal_list_with(verwaltungsmitarbeiter)
+        @secured
+        def get(self, passwort):
+            """ Auslesen von Verwaltungsmitarbeiter-Objekten, die durch ihr Passwort bestimmt werden.
+            Die auszulesenden Objekte werden durch ```passwort``` in dem URI bestimmt."""
+
+            adm = Administration()
+            verwaltungsmitarbeiter = adm.get_verwaltungsmitarbeiter_by_passwort(passwort)
+            return verwaltungsmitarbeiter
+
+if __name__ == '__main__':
+    app.run(debug=True)
