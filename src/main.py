@@ -595,3 +595,126 @@ class SemesteratOperations(Resource):
 # ----- SPO -----
 
 
+@spotch.route('/spo')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class SPOListOperations(Resource):
+    """Auslesen aller SPO-Objekte.
+    Sollten keine SPO-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+
+    @spotch.marshal_list_with(spo)
+    @secured
+    def get(self):
+        adm = Administration()
+        spo = adm.get_all_spo()
+        return spo
+
+    @spotch.marshal_with(spo, code=200)
+    @spotch.expect(spo)
+    @secured
+    def post(self):
+        """Anlegen eines neuen SPO-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der Administration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*""" #kann man Client hier lassen?
+
+        adm = Administration()
+        prpl = SPO.from_dict(api.payload)
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+
+        if prpl is not None:
+            """ Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben."""
+
+            s = adm.create_spo(prpl.get_ID(),
+                               prpl.get_beginn(),
+                               prpl.get_studiengang())
+
+            return s, 200
+
+        else:
+            ''' Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.'''
+
+            return '', 500
+
+
+@spotch.route('/spo/<int:id>')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class SPOatOperations(Resource):
+    @spotch.marshal_with(spo)
+    @secured
+    @secured
+    def get(self, id):
+        """Auslesen eines bestimmten SPO-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_spo = adm.get_spo_by_id(id)
+        return single_spo
+
+    @spotch.marshal_with(spo)
+    @spotch.expect(spo, validate=True)
+    @secured
+    def put(self, id):
+        """Update eines bestimmten SPO-Objekts.
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        SPO-Objekts."""
+
+        adm = Administration()
+        spo = SPO.from_dict(api.payload)
+        print('main aufruf')
+
+        if spo is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Semester-Objekts gesetzt."""
+
+            spo.set_id(id)
+            adm.save_spo(spo)
+            return '', 200
+
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """Löschen eines bestimmten SPO-Objekts.
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_spo = adm.get_spo(id)
+        adm.delete_spo(single_spo)
+        return '', 200
+
+
+    @spotch.route('/spo-beginn/<string:beginn>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class SPOBeginnOperations(Resource):
+        @spotch.marshal_list_with(spo)
+        @secured
+        def get(self, beginn):
+            """ Auslesen von SPO-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            spo = adm.get_spo_by_beginn(beginn)
+            return spo
+
+
+    @spotch.route('/spo-studiengang/<string:studiengang>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class SPOStudiengangOperations(Resource):
+        @spotch.marshal_list_with(spo)
+        @secured
+        def get(self, studiengang):
+            """ Auslesen von SPO-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            spo = adm.get_spo_by_studiengang(studiengang)
+            return spo
+
+
+# ----- Student -----
+
+
