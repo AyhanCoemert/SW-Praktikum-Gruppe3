@@ -189,7 +189,7 @@ class ModulOperations(Resource):
 
             adm = Administration()
             modul = adm.get_modul_by_name(name)
-            return modul  #brauchen wir Name?
+            return modul
 
 
     @spotch.route('/modul-by-sws/<string:sws>')
@@ -197,9 +197,9 @@ class ModulOperations(Resource):
     class ModulSwsOperations(Resource):
         @spotch.marshal_list_with(modul)
         @secured
-        def get(self, name):
-            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+        def get(self, sws):
+            """ Auslesen von Modul-Objekten, die durch ihre SWS bestimmt werden.
+            Die auszulesenden Objekte werden durch ```sws``` in dem URI bestimmt."""
 
             adm = Administration()
             modul = adm.get_modul_by_sws(sws)
@@ -211,9 +211,9 @@ class ModulOperations(Resource):
     class ModulEctsOperations(Resource):
         @spotch.marshal_list_with(modul)
         @secured
-        def get(self, name):
-            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+        def get(self, ects):
+            """ Auslesen von Modul-Objekten, die durch ihre Ects bestimmt werden.
+            Die auszulesenden Objekte werden durch ```ects``` in dem URI bestimmt."""
 
             adm = Administration()
             modul = adm.get_modul_by_ects(ects)
@@ -225,9 +225,9 @@ class ModulOperations(Resource):
     class ModulLiteraturOperations(Resource):
         @spotch.marshal_list_with(modul)
         @secured
-        def get(self, name):
-            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+        def get(self, literatur):
+            """ Auslesen von Modul-Objekten, die durch ihre Literatur bestimmt werden.
+            Die auszulesenden Objekte werden durch ```literatur``` in dem URI bestimmt."""
 
             adm = Administration()
             modul = adm.get_modul_by_literatur(literatur)
@@ -239,9 +239,9 @@ class ModulOperations(Resource):
     class ModulVerantwortlicherOperations(Resource):
         @spotch.marshal_list_with(modul)
         @secured
-        def get(self, name):
-            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+        def get(self, verantwortlicher):
+            """ Auslesen von Modul-Objekten, die durch ihren Verantwortlichen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```verantwortlicher``` in dem URI bestimmt."""
 
             adm = Administration()
             modul = adm.get_modul_by_verantwortlicher(verantwortlicher)
@@ -252,9 +252,9 @@ class ModulOperations(Resource):
     class ModulEdvNummerOperations(Resource):
         @spotch.marshal_list_with(modul)
         @secured
-        def get(self, name):
-            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+        def get(self, edv_nummer):
+            """ Auslesen von Modul-Objekten, die durch ihre EDV-Nummer bestimmt werden.
+            Die auszulesenden Objekte werden durch ```edv_nummer``` in dem URI bestimmt."""
 
             adm = Administration()
             modul = adm.get_modul_by_edv_nummer(edv_nummer)
@@ -456,28 +456,28 @@ class PrüfungsformatOperations(Resource):
         return '', 200
 
 
-    @spotch.route('/prüfungsformat-benennung/<string:benennung>')
+    @spotch.route('/prüfungsformat-by-benennung/<string:benennung>')
     @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
     class PrüfungsformatBenennungOperations(Resource):
         @spotch.marshal_list_with(prüfungsformat)
         @secured
         def get(self, benennung):
-            """ Auslesen von Prüfungsformat-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+            """ Auslesen von Prüfungsformat-Objekten, die durch ihre Benennung bestimmt werden.
+            Die auszulesenden Objekte werden durch ```benennung``` in dem URI bestimmt."""
 
             adm = Administration()
             prüfungsformat = adm.get_prüfungsformat_benennung(benennung)
             return prüfungsformat
 
 
-    @spotch.route('/prüfungsformat_leistung/<string:leistung>')
+    @spotch.route('/prüfungsformat-by-leistung/<string:leistung>')
     @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
     class PrüfungsformatLeistungOperations(Resource):
         @spotch.marshal_list_with(prüfungsformat)
         @secured
-        def get(self, name):
-            """ Auslesen von Prüfungsformat-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+        def get(self, leistung):
+            """ Auslesen von Prüfungsformat-Objekten, die durch ihre Leistung bestimmt werden.
+            Die auszulesenden Objekte werden durch ```leistung``` in dem URI bestimmt."""
 
             adm = Administration()
             prüfungsformat = adm.get_prüfungsformat_by_leistung(leistung)
@@ -578,14 +578,14 @@ class SemesteratOperations(Resource):
         return '', 200
 
 
-    @spotch.route('/semester-semesteranzahl/<string:semesteranzahl>')
+    @spotch.route('/semester-by-semesteranzahl/<string:semesteranzahl>')
     @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
     class SemesterSemesteranzahlOperations(Resource):
         @spotch.marshal_list_with(semester)
         @secured
         def get(self, semesteranzahl):
-            """ Auslesen von Semester-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+            """ Auslesen von Semester-Objekten, die durch ihre Semesteranzahl bestimmt werden.
+            Die auszulesenden Objekte werden durch ```semesteranzahl``` in dem URI bestimmt."""
 
             adm = Administration()
             semester = adm.get_semester_by_semesteranzahl(semesteranzahl)
@@ -687,28 +687,28 @@ class SPOatOperations(Resource):
         return '', 200
 
 
-    @spotch.route('/spo-beginn/<string:beginn>')
+    @spotch.route('/spo-by-beginn/<string:beginn>')
     @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
     class SPOBeginnOperations(Resource):
         @spotch.marshal_list_with(spo)
         @secured
         def get(self, beginn):
-            """ Auslesen von SPO-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+            """ Auslesen von SPO-Objekten, die durch ihren Beginn bestimmt werden.
+            Die auszulesenden Objekte werden durch ```beginn``` in dem URI bestimmt."""
 
             adm = Administration()
             spo = adm.get_spo_by_beginn(beginn)
             return spo
 
 
-    @spotch.route('/spo-studiengang/<string:studiengang>')
+    @spotch.route('/spo-by-studiengang/<string:studiengang>')
     @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
     class SPOStudiengangOperations(Resource):
         @spotch.marshal_list_with(spo)
         @secured
         def get(self, studiengang):
-            """ Auslesen von SPO-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+            """ Auslesen von SPO-Objekten, die durch ihren Studiengang bestimmt werden.
+            Die auszulesenden Objekte werden durch ```studiengang``` in dem URI bestimmt."""
 
             adm = Administration()
             spo = adm.get_spo_by_studiengang(studiengang)
@@ -816,14 +816,14 @@ class StudentatOperations(Resource):
         return '', 200
 
 
-    @spotch.route('/student-google-user-id/<string:google_user_id>')
+    @spotch.route('/student-by-google-user-id/<string:google_user_id>')
     @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
     class StudentGoogleUserIdOperations(Resource):
         @spotch.marshal_list_with(student)
         @secured
         def get(self, google_user_id):
-            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+            """ Auslesen von Student-Objekten, die durch ihre Google-User-ID bestimmt werden.
+            Die auszulesenden Objekte werden durch ```google_user_id``` in dem URI bestimmt."""
 
             adm = Administration()
             student = adm.get_student_by_google_user_id(google_user_id)
@@ -850,8 +850,8 @@ class StudentatOperations(Resource):
         @spotch.marshal_list_with(student)
         @secured
         def get(self, vorname):
-            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+            """ Auslesen von Student-Objekten, die durch ihren Vornamen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```vorname``` in dem URI bestimmt."""
 
             adm = Administration()
             student = adm.get_student_by_vorname(vorname)
@@ -864,8 +864,8 @@ class StudentatOperations(Resource):
         @spotch.marshal_list_with(student)
         @secured
         def get(self, mail_adresse):
-            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+            """ Auslesen von Student-Objekten, die durch ihre Mail-Adresse bestimmt werden.
+            Die auszulesenden Objekte werden durch ```mail_adresse``` in dem URI bestimmt."""
 
             adm = Administration()
             student = adm.get_student_by_mail_adresse(mail_adresse)
@@ -878,8 +878,8 @@ class StudentatOperations(Resource):
         @spotch.marshal_list_with(student)
         @secured
         def get(self, semester):
-            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+            """ Auslesen von Student-Objekten, die durch ihr Semester bestimmt werden.
+            Die auszulesenden Objekte werden durch ```semester``` in dem URI bestimmt."""
 
             adm = Administration()
             student = adm.get_student_by_semester(semester)
@@ -892,8 +892,8 @@ class StudentatOperations(Resource):
         @spotch.marshal_list_with(student)
         @secured
         def get(self, studiengang):
-            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+            """ Auslesen von Student-Objekten, die durch ihren Studiengang bestimmt werden.
+            Die auszulesenden Objekte werden durch ```studiengang``` in dem URI bestimmt."""
 
             adm = Administration()
             student = adm.get_student_by_studiengang(studiengang)
@@ -905,8 +905,8 @@ class StudentatOperations(Resource):
         @spotch.marshal_list_with(student)
         @secured
         def get(self, matrikelnummer):
-            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
-            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+            """ Auslesen von Student-Objekten, die durch ihre Matrikelnummer bestimmt werden.
+            Die auszulesenden Objekte werden durch ```matrikelnummer``` in dem URI bestimmt."""
 
             adm = Administration()
             student = adm.get_student_by_matrikelnummer(matrikelnummer)
@@ -915,3 +915,139 @@ class StudentatOperations(Resource):
 
 # ----- Studiengang -----
 
+
+@spotch.route('/studiengang')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class StudiengangListOperations(Resource):
+    """Auslesen aller Studiengang-Objekte.
+    Sollten keine Studiengang-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+
+    @spotch.marshal_list_with(studiengang)
+    @secured
+    def get(self):
+        adm = Administration()
+        studiengang = adm.get_all_studiengang()
+        return studiengang
+
+    @spotch.marshal_with(studiengang, code=200)
+    @spotch.expect(studiengang)
+    @secured
+    def post(self):
+        """Anlegen eines neuen Studiengang-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der Administration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*""" #kann man Client hier lassen?
+
+        adm = Administration()
+        prpl = Studiengang.from_dict(api.payload)
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+
+        if prpl is not None:
+            """ Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben."""
+
+            s = adm.create_studiengang(prpl.get_ID(),
+                                       prpl.get_module(),
+                                       prpl.get_semester(),
+                                       prpl.get_name())
+
+            return s, 200
+
+        else:
+            ''' Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.'''
+
+            return '', 500
+
+
+@spotch.route('/studiengang/<int:id>')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class StudiengangatOperations(Resource):
+    @spotch.marshal_with(studiengang)
+    @secured
+    @secured
+    def get(self, id):
+        """Auslesen eines bestimmten Studiengang-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_studiengang = adm.get_studiengang_by_id(id)
+        return single_studiengang
+
+    @spotch.marshal_with(studiengang)
+    @spotch.expect(studiengang, validate=True)
+    @secured
+    def put(self, id):
+        """Update eines bestimmten Studiengang-Objekts.
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Studiengang-Objekts."""
+
+        adm = Administration()
+        studiengang = Studiengang.from_dict(api.payload)
+        print('main aufruf')
+
+        if studiengang is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Student-Objekts gesetzt."""
+
+            studiengang.set_id(id)
+            adm.save_studiengang(studiengang)
+            return '', 200
+
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """Löschen eines bestimmten Studiengang-Objekts.
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_studiengang = adm.get_studiengang(id)
+        adm.delete_studiengang(single_studiengang)
+        return '', 200
+
+
+    @spotch.route('/studiengang-by-module/<string:module>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class StudiengangModuleOperations(Resource):
+        @spotch.marshal_list_with(studiengang)
+        @secured
+        def get(self, module):
+            """ Auslesen von Studiengang-Objekten, die durch ihre Module bestimmt werden.
+            Die auszulesenden Objekte werden durch ```module``` in dem URI bestimmt."""
+
+            adm = Administration()
+            studiengang = adm.get_studiengang_by_module(module)
+            return studiengang
+
+
+    @spotch.route('/studiengang-by-semester/<string:semester>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class StudiengangSemesterOperations(Resource):
+        @spotch.marshal_list_with(studiengang)
+        @secured
+        def get(self, semester):
+            """ Auslesen von Studiengang-Objekten, die durch ihr Semester bestimmt werden.
+            Die auszulesenden Objekte werden durch ```semester``` in dem URI bestimmt."""
+
+            adm = Administration()
+            studiengang = adm.get_studiengang_by_semester(semester)
+            return studiengang
+
+    @spotch.route('/studiengang-by-name/<string:name>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class StudiengangModuleOperations(Resource):
+        @spotch.marshal_list_with(studiengang)
+        @secured
+        def get(self, name):
+            """ Auslesen von Studiengang-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            studiengang = adm.get_studiengang_by_name(name)
+            return studiengang
+
+
+# ----- Verwaltungsmitarbeiter -----
