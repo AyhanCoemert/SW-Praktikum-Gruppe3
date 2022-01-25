@@ -78,6 +78,11 @@ Modul = api.inherit('Modul', bo, {
     'verantwortlicher': fields.Integer(attribute='_verantwortlicher', description='verantwortlicher eines moduls'),
     'edv_nummer': fields.Integer(attribute='_edv_nummer', description='edv_nummer eines moduls') #muss das nicht für jeden einzeln?
 })
+
+
+#---Modul----
+
+
 @spotch.route('/modul')
 @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
 class UserListOperations(Resource):
@@ -95,12 +100,12 @@ class UserListOperations(Resource):
     @spotch.expect(modul)
     @secured
     def post(self):
-        """Anlegen eines neuen User-Objekts.
+        """Anlegen eines neuen Modul-Objekts.
         **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
         So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
         Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
         liegt es an der Administration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*"""
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*""" #kann man Client hier lassen?
 
         adm = Administration()
         prpl = Modul.from_dict(api.payload)
@@ -123,12 +128,12 @@ class UserListOperations(Resource):
 
 @spotch.route('/modul/<int:id>')
 @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
-class modulOperations(Resource):
+class ModulOperations(Resource):
     @studyfix.marshal_with(modul)
     @secured
     @secured
     def get(self, id):
-        """Auslesen eines bestimmten User-Objekts.
+        """Auslesen eines bestimmten Modul-Objekts.
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt."""
 
         adm = Administration()
@@ -149,7 +154,7 @@ class modulOperations(Resource):
         print('main aufruf')
 
         if modul is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) User-Objekts gesetzt."""
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Modul-Objekts gesetzt."""
 
             modul.set_id(id)
             adm.save_modul(modul)
@@ -168,6 +173,7 @@ class modulOperations(Resource):
         adm.delete_modul(single_modul)
         return '', 200
 
+
     @spotch.route('/modul-by-name/<string:name>')
     @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
     class ModulNameOperations(Resource):
@@ -179,4 +185,178 @@ class modulOperations(Resource):
 
             adm = Administration()
             modul = adm.get_modul_by_name(name)
+            return modul  #brauchen wir Name?
+
+
+    @spotch.route('/modul-by-sws/<string:sws>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class ModulSwsOperations(Resource):
+        @spotch.marshal_list_with(modul)
+        @secured
+        def get(self, name):
+            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            modul = adm.get_modul_by_sws(sws)
             return modul
+
+
+    @spotch.route('/modul-by-ects/<string:ects>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class ModulEctsOperations(Resource):
+        @spotch.marshal_list_with(modul)
+        @secured
+        def get(self, name):
+            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            modul = adm.get_modul_by_ects(ects)
+            return modul
+
+
+    @spotch.route('/modul-by-literatur/<string:literatur>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class ModulLiteraturOperations(Resource):
+        @spotch.marshal_list_with(modul)
+        @secured
+        def get(self, name):
+            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            modul = adm.get_modul_by_literatur(literatur)
+            return modul
+
+
+    @spotch.route('/modul-by-verantwortlicher/<string:verantwortlicher>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class ModulVerantwortlicherOperations(Resource):
+        @spotch.marshal_list_with(modul)
+        @secured
+        def get(self, name):
+            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            modul = adm.get_modul_by_verantwortlicher(verantwortlicher)
+            return modul
+
+    @spotch.route('/modul-by-edv-nummer/<string:edv_nummer>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class ModulEdvNummerOperations(Resource):
+        @spotch.marshal_list_with(modul)
+        @secured
+        def get(self, name):
+            """ Auslesen von Modul-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            modul = adm.get_modul_by_edv_nummer(edv_nummer)
+            return modul
+
+# ----Modulteil-----
+
+
+@spotch.route('/Modulteil')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class ModulteilListOperations(Resource):
+    """Auslesen aller Modulteil-Objekte.
+    Sollten keine Modulteil-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+
+    @spotch.marshal_list_with(modulteil)
+    @secured
+    def get(self):
+        adm = Administration()
+        modulteile = adm.get_all_modulteile()
+        return modulteile
+
+    @spotch.marshal_with(modulteil, code=200)
+    @spotch.expect(modulteil)
+
+    def post(self):
+        """Anlegen eines neuen Modulteil-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der Administration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+
+        adm = Administration()
+        print(api.payload)
+        prpl = Modulteil.from_dict(api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+
+        if prpl is not None:
+            """ Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+
+            s = adm.create_modulteil(prpl.get_ID(),
+                                          )
+            return s, 200
+
+        else:
+            return '', 500
+
+
+@spotch.route('/modulteil/<int:id>')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class ModulteilOperations(Resource):
+    @spotch.marshal_with(Modulteil)
+    @secured
+    def get(self, id):
+        """Auslesen eines bestimmten Modulteil-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+
+        adm = Administration()
+        single_modulteil = adm.get_modulteil_by_id(id)
+        return single_modulteil
+
+    @secured
+    def delete(self, id):
+        """Löschen eines bestimmten Modulteil-Objekts.
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        modulteil = adm.get_modulteil_by_id(id)
+
+        if modulteil is not None:
+
+            adm.delete_modulteil(modulteil)
+            return '', 200
+
+        else:
+            return '', 500
+
+    @spotch.marshal_with(modulteil)
+    @spotch.expect(modulteil, validate=True)  #Wir erwarten ein Modulteil-Objekt von Client-Seite.
+
+    def put(self, id):
+        """Update eines bestimmten Modulteil-Objekts.
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Modulteil-Objekts."""
+
+        adm = Administration()
+        modulteil = Modulteil.from_dict(api.payload)
+        print('main aufruf')
+
+        if modulteil is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Modulteil-Objekts gesetzt."""
+
+            modulteil.set_id(id)
+            adm.save_modulteil(modulteil)
+            return '', 200
+
+        else:
+            return '', 500
+
+
+# ---------Prüfungsformat------------
+
+
