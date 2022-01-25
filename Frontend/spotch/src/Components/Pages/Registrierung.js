@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react'
 import {Form, Button, Card, Alert} from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
-import { Link, useHistory } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 
 export default function Registrierung() {
@@ -11,7 +11,7 @@ export default function Registrierung() {
 	const { registrierung } = useAuth()
 	const [error, setError] = useState('')
 	const [loading, setLoading] = useState(false)
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	async function handleSubmit(e){
 		e.preventDefault()
@@ -25,6 +25,7 @@ export default function Registrierung() {
 			setError('')
 			setLoading(true)
 			await registrierung(emailRef.current.value, passwortRef.current.value)
+			navigate("/")
 		} catch{
 			setError('Failed to create an Account')
 		}
