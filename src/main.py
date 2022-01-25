@@ -667,7 +667,7 @@ class SPOatOperations(Resource):
         print('main aufruf')
 
         if spo is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Semester-Objekts gesetzt."""
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) SPO-Objekts gesetzt."""
 
             spo.set_id(id)
             adm.save_spo(spo)
@@ -718,5 +718,200 @@ class SPOatOperations(Resource):
 # ----- Student -----
 
 
+@spotch.route('/student')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class StudentListOperations(Resource):
+    """Auslesen aller Student-Objekte.
+    Sollten keine Student-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
 
+    @spotch.marshal_list_with(student)
+    @secured
+    def get(self):
+        adm = Administration()
+        student = adm.get_all_student()
+        return student
+
+    @spotch.marshal_with(student, code=200)
+    @spotch.expect(student)
+    @secured
+    def post(self):
+        """Anlegen eines neuen Student-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der Administration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*""" #kann man Client hier lassen?
+
+        adm = Administration()
+        prpl = Student.from_dict(api.payload)
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+
+        if prpl is not None:
+            """ Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben."""
+
+            s = adm.create_student(prpl.get_ID(),
+                                   prpl.get_google_user_id(),
+                                   prpl.get_name(),
+                                   prpl.get_vorname(),
+                                   prpl.get_mail_adresse(),
+                                   prpl.semester(),
+                                   prpl.get_studiengang(),
+                                   prpl.matrikelnummer()
+                                   )
+
+            return s, 200
+
+        else:
+            ''' Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.'''
+
+            return '', 500
+
+
+@spotch.route('/student/<int:id>')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class StudentatOperations(Resource):
+    @spotch.marshal_with(student)
+    @secured
+    @secured
+    def get(self, id):
+        """Auslesen eines bestimmten Student-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_student = adm.get_student_by_id(id)
+        return single_student
+
+    @spotch.marshal_with(student)
+    @spotch.expect(student, validate=True)
+    @secured
+    def put(self, id):
+        """Update eines bestimmten Student-Objekts.
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Student-Objekts."""
+
+        adm = Administration()
+        student = Student.from_dict(api.payload)
+        print('main aufruf')
+
+        if student is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Student-Objekts gesetzt."""
+
+            student.set_id(id)
+            adm.save_student(student)
+            return '', 200
+
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """Löschen eines bestimmten Student-Objekts.
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_student = adm.get_student(id)
+        adm.delete_student(single_student)
+        return '', 200
+
+
+    @spotch.route('/student-google-user-id/<string:google_user_id>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class StudentGoogleUserIdOperations(Resource):
+        @spotch.marshal_list_with(student)
+        @secured
+        def get(self, google_user_id):
+            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            student = adm.get_student_by_google_user_id(google_user_id)
+            return student
+
+
+    @spotch.route('/student-by-name/<string:name>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class StudentByNameOperations(Resource):
+        @spotch.marshal_list_with(student)
+        @secured
+        def get(self, name):
+            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            student = adm.get_student_by_name(name)
+            return student
+
+
+    @spotch.route('/student-by-vorname/<string:vorname>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class StudentByVornameOperations(Resource):
+        @spotch.marshal_list_with(student)
+        @secured
+        def get(self, vorname):
+            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            student = adm.get_student_by_vorname(vorname)
+            return student
+
+
+    @spotch.route('/student-by-mail-adresse/<string:mail_adresse>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class StudentByMailAdresseOperations(Resource):
+        @spotch.marshal_list_with(student)
+        @secured
+        def get(self, mail_adresse):
+            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            student = adm.get_student_by_mail_adresse(mail_adresse)
+            return student
+
+
+    @spotch.route('/student-by-semester/<string:semester>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class StudentBySemesterOperations(Resource):
+        @spotch.marshal_list_with(student)
+        @secured
+        def get(self, semester):
+            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            student = adm.get_student_by_semester(semester)
+            return student
+
+
+    @spotch.route('/student-by-studiengang/<string:studiengang>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class StudentByStudiengang(Resource):
+        @spotch.marshal_list_with(student)
+        @secured
+        def get(self, studiengang):
+            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            student = adm.get_student_by_studiengang(studiengang)
+            return student
+
+    @spotch.route('/student-by-matrikelnummer/<string:matrikelnummer>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class StudentByMatrikelnummerOperations(Resource):
+        @spotch.marshal_list_with(student)
+        @secured
+        def get(self, matrikelnummer):
+            """ Auslesen von Student-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            student = adm.get_student_by_matrikelnummer(matrikelnummer)
+            return student
+
+
+# ----- Studiengang -----
 
