@@ -80,12 +80,12 @@ Modul = api.inherit('Modul', bo, {
 })
 
 
-#---Modul----
+# ----- Modul -----
 
 
 @spotch.route('/modul')
 @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
-class UserListOperations(Resource):
+class ModulListOperations(Resource):
     """Auslesen aller modul-Objekte.
     Sollten keine modul-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
 
@@ -115,8 +115,12 @@ class UserListOperations(Resource):
             """ Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben."""
 
-            s = adm.create_modul(prpl.get_creation_date(), prpl.get_sws(), prpl.get_ects(),
-                                prpl.get_literatur(), prpl.get_verantwortlicher(), prpl.get_edv_nummer())
+            s = adm.create_modul(prpl.get_creation_date(),
+                                 prpl.get_sws(),
+                                 prpl.get_ects(),
+                                 prpl.get_literatur(),
+                                 prpl.get_verantwortlicher(),
+                                 prpl.get_edv_nummer())
 
             return s, 200
 
@@ -129,7 +133,7 @@ class UserListOperations(Resource):
 @spotch.route('/modul/<int:id>')
 @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
 class ModulOperations(Resource):
-    @studyfix.marshal_with(modul)
+    @spotch.marshal_with(modul)
     @secured
     @secured
     def get(self, id):
@@ -144,10 +148,10 @@ class ModulOperations(Resource):
     @spotch.expect(modul, validate=True)
     @secured
     def put(self, id):
-        """Update eines bestimmten User-Objekts.
+        """Update eines bestimmten Modul-Objekts.
         **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
         verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        User-Objekts."""
+        Modul-Objekts."""
 
         adm = Administration()
         modul = Modul.from_dict(api.payload)
@@ -256,7 +260,7 @@ class ModulOperations(Resource):
             modul = adm.get_modul_by_edv_nummer(edv_nummer)
             return modul
 
-# ----Modulteil-----
+# ----- Modulteil -----
 
 
 @spotch.route('/Modulteil')
@@ -357,6 +361,130 @@ class ModulteilOperations(Resource):
             return '', 500
 
 
-# ---------Prüfungsformat------------
+# ----- Prüfungsformat -----
+
+
+@spotch.route('/prüfungsformat')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class PrüfungsformatListOperations(Resource):
+    """Auslesen aller Prüfungsformat-Objekte.
+    Sollten keine Prüfungsformat-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+
+    @spotch.marshal_list_with(prüfungsformat)
+    @secured
+    def get(self):
+        adm = Administration()
+        prüfungsformat = adm.get_all_prüfungsformat()
+        return prüfungsformat
+
+    @spotch.marshal_with(prüfungsformat, code=200)
+    @spotch.expect(prüfungsformat)
+    @secured
+    def post(self):
+        """Anlegen eines neuen Prüfungsformat-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der Administration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*""" #kann man Client hier lassen?
+
+        adm = Administration()
+        prpl = Prüfungsformat.from_dict(api.payload)
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+
+        if prpl is not None:
+            """ Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben."""
+
+            s = adm.create_prüfungsformat(prpl.get_ID(),
+                                          prpl.get_benennung(),
+                                          prpl.get_leistung())
+
+            return s, 200
+
+        else:
+            ''' Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.'''
+
+            return '', 500
+
+
+@spotch.route('/prüfungsformat/<int:id>')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class PrüfungsformatOperations(Resource):
+    @spotch.marshal_with(prüfungsformat)
+    @secured
+    @secured
+    def get(self, id):
+        """Auslesen eines bestimmten Prüfungsformat-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_prüfungsformat = adm.get_rüfungsformat_by_id(id)
+        return single_prüfungsformat
+
+    @spotch.marshal_with(prüfungsformat)
+    @spotch.expect(prüfungsformat, validate=True)
+    @secured
+    def put(self, id):
+        """Update eines bestimmten Prüfungsformat-Objekts.
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Prüfungsformat-Objekts."""
+
+        adm = Administration()
+        prüfungsformat = Prüfungsformat.from_dict(api.payload)
+        print('main aufruf')
+
+        if prüfungsformat is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Prüfungsformat-Objekts gesetzt."""
+
+            prüfungsformat.set_id(id)
+            adm.save_prüfungsformat(prüfungsformat)
+            return '', 200
+
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """Löschen eines bestimmten Prüfungsformat-Objekts.
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_prüfungsformat = adm.get_prüfungsformat_by_id(id)
+        adm.delete_prüfungsformat(single_prüfungsformat)
+        return '', 200
+
+
+    @spotch.route('/prüfungsformat-benennung/<string:benennung>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class PrüfungsformatBenennungOperations(Resource):
+        @spotch.marshal_list_with(prüfungsformat)
+        @secured
+        def get(self, benennung):
+            """ Auslesen von Prüfungsformat-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            prüfungsformat = adm.get_prüfungsformat_benennung(benennung)
+            return prüfungsformat
+
+
+    @spotch.route('/prüfungsformat_leistung/<string:leistung>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class PrüfungsformatLeistungOperations(Resource):
+        @spotch.marshal_list_with(prüfungsformat)
+        @secured
+        def get(self, name):
+            """ Auslesen von Prüfungsformat-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            prüfungsformat = adm.get_prüfungsformat_by_leistung(leistung)
+            return prüfungsformat
+
+
+# ------ Semester -----
+
 
 
