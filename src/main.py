@@ -419,7 +419,7 @@ class PrüfungsformatOperations(Resource):
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt."""
 
         adm = Administration()
-        single_prüfungsformat = adm.get_rüfungsformat_by_id(id)
+        single_prüfungsformat = adm.get_prüfungsformat_by_id(id)
         return single_prüfungsformat
 
     @spotch.marshal_with(prüfungsformat)
@@ -486,5 +486,112 @@ class PrüfungsformatOperations(Resource):
 
 # ------ Semester -----
 
+
+@spotch.route('/semester')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class SemesterListOperations(Resource):
+    """Auslesen aller Semester-Objekte.
+    Sollten keine Semester-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+
+    @spotch.marshal_list_with(semester)
+    @secured
+    def get(self):
+        adm = Administration()
+        semester = adm.get_all_semester()
+        return semester
+
+    @spotch.marshal_with(semester, code=200)
+    @spotch.expect(semester)
+    @secured
+    def post(self):
+        """Anlegen eines neuen Semester-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der Administration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*""" #kann man Client hier lassen?
+
+        adm = Administration()
+        prpl = Semester.from_dict(api.payload)
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+
+        if prpl is not None:
+            """ Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben."""
+
+            s = adm.create_semester(prpl.get_ID(),
+                                    prpl.get_semesteranzahl())
+
+            return s, 200
+
+        else:
+            ''' Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.'''
+
+            return '', 500
+
+
+@spotch.route('/semester/<int:id>')
+@spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+class SemesteratOperations(Resource):
+    @spotch.marshal_with(semester)
+    @secured
+    @secured
+    def get(self, id):
+        """Auslesen eines bestimmten Semester-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_semester = adm.get_semester_by_id(id)
+        return single_semester
+
+    @spotch.marshal_with(semester)
+    @spotch.expect(semester, validate=True)
+    @secured
+    def put(self, id):
+        """Update eines bestimmten Semester-Objekts.
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Semester-Objekts."""
+
+        adm = Administration()
+        semester = Semester.from_dict(api.payload)
+        print('main aufruf')
+
+        if semester is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Semester-Objekts gesetzt."""
+
+            semester.set_id(id)
+            adm.save_semester(semester)
+            return '', 200
+
+        else:
+            return '', 500
+
+    @secured
+    def delete(self, id):
+        """Löschen eines bestimmten Semester-Objekts.
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt."""
+
+        adm = Administration()
+        single_semester = adm.get_semester_by_id(id)
+        adm.delete_semester(single_semester)
+        return '', 200
+
+
+    @spotch.route('/semester-semesteranzahl/<string:semesteranzahl>')
+    @spotch.response(500, 'Wenn ein Server-seitiger Fehler aufkommt')
+    class SemesterSemesteranzahlOperations(Resource):
+        @spotch.marshal_list_with(semester)
+        @secured
+        def get(self, semesteranzahl):
+            """ Auslesen von Semester-Objekten, die durch ihren Namen bestimmt werden.
+            Die auszulesenden Objekte werden durch ```name``` in dem URI bestimmt."""
+
+            adm = Administration()
+            semester = adm.get_semester_by_semesteranzahl(semesteranzahl)
+            return semester
+
+
+# ----- SPO -----
 
 
