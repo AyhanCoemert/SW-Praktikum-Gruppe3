@@ -6,6 +6,10 @@ import { updateDoc, doc } from "firebase/firestore";
 import { AuthContext } from "../context/auth";
 import { useNavigate } from "react-router-dom";
 
+
+
+//@author [Soumayyah Aboubakar](https://github.com/soumayyahaboubakar)
+
 const Navbar = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);

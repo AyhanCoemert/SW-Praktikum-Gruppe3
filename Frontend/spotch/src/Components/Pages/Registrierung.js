@@ -4,6 +4,8 @@ import { useAuth } from '../../contexts/AuthContext'
 import { Link, useNavigate } from "react-router-dom"
 
 
+//@author [Soumayyah Aboubakar](https://github.com/soumayyahaboubakar)
+
 export default function Registrierung() {
 	const emailRef = useRef()
 	const passwortRef = useRef()

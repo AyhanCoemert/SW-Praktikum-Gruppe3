@@ -1,6 +1,8 @@
 import BusinessObject from "./BusinessObject.js"
 
 
+//@author [Soumayyah Aboubakar](https://github.com/soumayyahaboubakar)
+
 
 export default class User extends BusinessObject{
     /**

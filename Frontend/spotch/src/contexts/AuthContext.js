@@ -1,6 +1,10 @@
 import React, {useContext, useState, useEffect } from 'react'
 import {auth} from '../firebase'
 
+
+//@author [Soumayyah Aboubakar](https://github.com/soumayyahaboubakar)
+
+
 const AuthContext = React.createContext()
 
 export function useAuth(){
