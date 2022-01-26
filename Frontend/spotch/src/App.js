@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './Components/Pages/Login';
 
 
+
 function App() {
   return (
 
@@ -19,8 +20,8 @@ function App() {
           <Router>
           <AuthProvider>
             <Routes>
-            <Route path="/login" component={Login} />
-            <Route path="/registrierung" component={Registrierung} />
+            <Route path="/login" component={<Login/>} />
+            <Route path="/registrierung" component={<Registrierung/>} />
             </Routes>
           </AuthProvider>
           </Router>
