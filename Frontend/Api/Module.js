@@ -66,7 +66,7 @@ export default class Modul extends BusinessObject{
             })
         } else {
             let c = module;
-            Object.setPrototypeOf(c, Moduel.prototype);
+            Object.setPrototypeOf(c, Module.prototype);
             result.push(c);
         }
 
