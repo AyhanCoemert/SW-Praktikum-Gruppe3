@@ -14,7 +14,8 @@ from .db.SemesterMapper import *
 from .db.SPOMapper import *
 from .db.StudentMapper import *
 from .db.StudiengangMapper import *
-from .db.VerwaltungsmitarbeiterMapper import *
+from .db.ModulMapper import *
+
 
 
 class Administration(object):
